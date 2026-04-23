@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calcolatore South Working® — Quanto risparmierebbe la tua famiglia?</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blu: #1a3a5c;
+    --blu-medio: #2d5f8a;
+    --blu-chiaro: #e8f0f8;
+    --rosso: #e63329;
+    --grigio-bg: #f7f7f5;
+    --grigio-bordo: #e0ddd8;
+    --testo: #1a1a1a;
+    --testo-soft: #666;
+    --bianco: #ffffff;
+  }
+
+  body {
+    font-family: 'Open Sans', sans-serif;
+    background: var(--grigio-bg);
+    color: var(--testo);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--blu);
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    height: 64px;
+    border-bottom: 3px solid var(--rosso);
+  }
+  .logo {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  .logo span { color: var(--rosso); }
+
+  /* HERO */
+  .hero {
+    background: var(--blu);
+    padding: 52px 32px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--rosso) 0%, #f5a623 100%);
+  }
+  .pretitle {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    max-width: 560px;
+    margin: 0 auto 24px;
+    line-height: 1.75;
+    font-style: italic;
+  }
+  .pretitle strong { color: rgba(255,255,255,0.85); font-style: normal; }
+  .hero h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(22px, 4vw, 34px);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+  .hero h1 span { color: #f5a623; }
+  .hero-sub {
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.65;
+  }
+  .hero-sub em { font-style: normal; opacity: 0.75; }
+
+  /* CARD */
+  .card {
+    background: var(--bianco);
+    border-radius: 0;
+    padding: 32px;
+    margin: 0 auto;
+    max-width: 680px;
+    border-left: 4px solid var(--blu);
+    margin-top: 32px;
+    margin-bottom: 0;
+    box-shadow: 0 2px 12px rgba(26,58,92,0.08);
+  }
+
+  .section-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--blu);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--grigio-bordo); }
+
+  .field { margin-bottom: 22px; }
+
+  label {
+    display: block;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--blu);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  label span {
+    font-weight: 400;
+    color: var(--testo-soft);
+    text-transform: none;
+    letter-spacing: 0;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 11px;
+  }
+
+  input[type="range"] {
+    width: 100%;
+    -webkit-appearance: none;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--grigio-bordo);
+    outline: none;
+    cursor: pointer;
+    margin-top: 4px;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--blu);
+    cursor: pointer;
+    border: 3px solid #fff;
+    box-shadow: 0 1px 6px rgba(26,58,92,0.3);
+  }
+
+  .range-val {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--blu);
+    margin-top: 6px;
+  }
+  .range-hint {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--testo-soft);
+    margin-top: 3px;
+  }
+
+  select {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid var(--grigio-bordo);
+    border-radius: 4px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    color: var(--testo);
+    background: #fff;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231a3a5c' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    transition: border-color 0.2s;
+  }
+  select:focus { border-color: var(--blu); }
+
+  .tabs { display: flex; gap: 0; margin-bottom: 14px; border: 1.5px solid var(--grigio-bordo); border-radius: 4px; overflow: hidden; flex-wrap: wrap; }
+  .tab {
+    flex: 1; min-width: 80px;
+    padding: 9px 6px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--testo-soft);
+    background: #fff;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+    border-right: 1px solid var(--grigio-bordo);
+    text-transform: uppercase;
+  }
+  .tab:last-child { border-right: none; }
+  .tab.active { background: var(--blu); color: #fff; }
+
+  .extra-box {
+    display: none;
+    margin-top: 12px;
+    padding: 16px;
+    background: var(--blu-chiaro);
+    border-left: 3px solid var(--blu-medio);
+    border-radius: 0 4px 4px 0;
+  }
+  .extra-box.show { display: block; }
+  .extra-box label { color: var(--blu-medio); }
+
+  .figli-box {
+    display: none;
+    margin-top: 12px;
+    padding: 16px;
+    background: var(--blu-chiaro);
+    border-left: 3px solid var(--blu-medio);
+    border-radius: 0 4px 4px 0;
+  }
+  .figli-box.show { display: block; }
+  .figli-box label { color: var(--blu-medio); }
+
+  .figli-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .figli-stepper { display: flex; align-items: center; gap: 0; border: 1.5px solid var(--grigio-bordo); border-radius: 4px; overflow: hidden; }
+  .figli-btn {
+    width: 36px; height: 36px;
+    border: none;
+    background: var(--grigio-bg);
+    font-size: 18px; font-weight: 700;
+    color: var(--blu);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .figli-btn:hover { background: var(--blu-chiaro); }
+  .figli-num {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 20px; font-weight: 700;
+    color: var(--blu);
+    min-width: 44px; text-align: center;
+    border-left: 1px solid var(--grigio-bordo);
+    border-right: 1px solid var(--grigio-bordo);
+    padding: 6px 0;
+  }
+  .spesa-figli-label { font-size: 11px; color: var(--testo-soft); margin-top: 8px; line-height: 1.6; }
+
+  .nota-box {
+    padding: 14px 16px;
+    border-radius: 4px;
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 18px;
+    display: none;
+  }
+  .nota-box.show { display: block; }
+  .nota-box.estero { background: #fff8e1; border-left: 3px solid #f5a623; color: #5a3e00; }
+  .nota-box.sud { background: #e8f5e9; border-left: 3px solid #2e7d32; color: #1b5e20; }
+  .nota-box strong { font-weight: 600; }
+
+  .spese-casa-box {
+    display: none;
+    margin-top: 10px;
+    padding: 14px;
+    background: #e8f5e9;
+    border-left: 3px solid #2e7d32;
+    border-radius: 0 4px 4px 0;
+  }
+  .spese-casa-box.show { display: block; }
+  .spese-casa-box label { color: #2e7d32; }
+
+  .btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--rosso);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 8px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .btn:hover { background: #c0281f; }
+  .btn:active { transform: scale(0.99); }
+
+  /* RISULTATO */
+  .risultato {
+    display: none;
+    background: var(--blu);
+    padding: 36px 32px;
+    margin: 0 auto;
+    max-width: 680px;
+    margin-bottom: 0;
+    border-top: 4px solid var(--rosso);
+  }
+  .risultato.show { display: block; animation: fadeUp 0.4s ease; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+  .ris-nucleo { font-size: 11px; color: rgba(255,255,255,0.4); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.08em; font-family: 'Montserrat', sans-serif; }
+  .ris-label { font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: #f5a623; margin-bottom: 6px; }
+  .ris-num { font-family: 'Montserrat', sans-serif; font-size: clamp(40px, 9vw, 58px); font-weight: 800; color: #fff; line-height: 1; margin-bottom: 4px; }
+  .ris-sub { font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 28px; }
+
+  .ris-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+  .ris-box { background: rgba(255,255,255,0.07); border-top: 2px solid rgba(255,255,255,0.12); padding: 14px; }
+  .ris-box-label { font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 4px; }
+  .ris-box-val { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 700; color: #fff; }
+  .ris-box-val.green { color: #81c784; }
+  .ris-box-val.gold { color: #f5a623; }
+
+  .bonus-figli { background: rgba(245,166,35,0.12); border-left: 3px solid #f5a623; padding: 12px 14px; margin-bottom: 16px; font-size: 13px; color: rgba(255,255,255,0.85); line-height: 1.6; display: none; }
+  .bonus-figli.show { display: block; }
+  .bonus-figli strong { color: #f5a623; }
+
+  .incentivo-badge { background: rgba(255,255,255,0.06); border-left: 3px solid var(--rosso); padding: 14px 16px; margin-bottom: 20px; font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.65; }
+  .incentivo-badge strong { color: #fff; }
+
+  .segnala-link { text-align: center; margin-bottom: 16px; }
+  .segnala-link a { font-size: 12px; color: rgba(255,255,255,0.35); text-decoration: underline; }
+  .segnala-link a:hover { color: rgba(255,255,255,0.6); }
+
+  .cta-box { background: var(--rosso); padding: 24px 20px 20px; text-align: center; }
+  .cta-title { font-family: 'Montserrat', sans-serif; font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 8px; line-height: 1.3; text-transform: uppercase; letter-spacing: 0.03em; }
+  .cta-sub { font-size: 13px; color: rgba(255,255,255,0.8); margin-bottom: 16px; line-height: 1.6; }
+  .cta-btn { display: inline-block; background: #fff; color: var(--rosso); font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 13px; padding: 12px 28px; border-radius: 4px; text-decoration: none; letter-spacing: 0.06em; text-transform: uppercase; transition: opacity 0.2s; }
+  .cta-btn:hover { opacity: 0.92; }
+  .cta-nota { font-size: 11px; color: rgba(255,255,255,0.45); margin-top: 12px; line-height: 1.6; }
+
+  /* DISCLAIMER */
+  .disclaimer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--testo-soft);
+    padding: 24px 20px 36px;
+    line-height: 1.7;
+    max-width: 680px;
+    margin: 0 auto;
+    border-top: 1px solid var(--grigio-bordo);
+    margin-top: 0;
+    background: var(--grigio-bg);
+  }
+  .disclaimer a { color: var(--blu); text-decoration: underline; }
+
+  /* FOOTER */
+  .footer {
+    background: var(--blu);
+    text-align: center;
+    padding: 20px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 0.05em;
+  }
+  .footer a { color: rgba(255,255,255,0.5); text-decoration: none; }
+  .footer a:hover { color: #fff; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <a href="https://www.southworking.org" class="logo">South <span>Working</span>®</a>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <p class="pretitle">
+    <strong>Molti benefici del South Working non si possono quantificare</strong> — stare vicino ai tuoi genitori, ritrovare i tuoi affetti, respirare aria pulita, vivere a un ritmo più umano. Ma per la parte numerica, abbiamo costruito questo strumento.
+  </p>
+  <h1>Quanto risparmierebbe<br>la tua famiglia in <span>South Working?</span></h1>
+  <p class="hero-sub">Inserisci la tua situazione e scopri una stima orientativa del risparmio — affitto, potere d'acquisto, spese per i figli e incentivi regionali. <em>Stime indicative, non consulenza fiscale o legale.</em></p>
+</div>
+
+<!-- FORM -->
+<div class="card">
+
+  <div class="section-label">Il tuo nucleo familiare</div>
+  <div class="field">
+    <label>Composizione del nucleo</label>
+    <div class="tabs" id="tabs-nucleo">
+      <div class="tab active" onclick="setNucleo('solo',this)">Solo/a</div>
+      <div class="tab" onclick="setNucleo('coppia',this)">Coppia</div>
+      <div class="tab" onclick="setNucleo('famiglia',this)">Con figli</div>
+    </div>
+  </div>
+
+  <div class="section-label" style="margin-top:4px;">La situazione attuale</div>
+
+  <div class="field">
+    <label>Dove vivi attualmente?</label>
+    <div class="tabs" id="tabs-dove-vivi">
+      <div class="tab active" onclick="setDoveVivi('nord',this)">Nord / Centro Italia</div>
+      <div class="tab" onclick="setDoveVivi('estero',this)">All'estero</div>
+      <div class="tab" onclick="setDoveVivi('sud',this)">Già al Sud</div>
+    </div>
+  </div>
+
+  <div class="nota-box estero" id="nota-estero">
+    <strong>🌍 Sei all'estero — cosa sapere</strong><br>
+    Puoi accedere alla legge siciliana anche con un'azienda estera (UE o extra-UE), ma devi trasferire la <strong>residenza in Sicilia</strong> prima della concessione del contributo.<br>
+    Se sei stato/a residente all'estero per almeno 2 anni, potresti avere diritto al regime <strong>rientro dei cervelli</strong> (detassazione IRPEF al 50% per 5 anni).<br>
+    <em>Consigliamo una call di orientamento per capire il percorso giusto nel tuo caso.</em>
+  </div>
+
+  <div class="nota-box sud" id="nota-sud">
+    <strong>✅ Sei già al Sud</strong><br>
+    Se hai già la residenza al Sud e lavori da remoto per un'azienda del Nord o estera, potresti già avere diritto agli incentivi regionali — senza dover fare nessun trasferimento.
+  </div>
+
+  <div class="field">
+    <label>Città attuale <span id="label-citta"></span></label>
+    <select id="citta-nord">
+      <option value="milano">Milano</option>
+      <option value="roma">Roma</option>
+      <option value="torino">Torino</option>
+      <option value="bologna">Bologna</option>
+      <option value="firenze">Firenze</option>
+      <option value="altro">Altra città del Nord/Centro</option>
+    </select>
+    <select id="citta-estero" style="display:none; margin-top:8px;">
+      <option value="londra">Londra / UK</option>
+      <option value="parigi">Parigi / Francia</option>
+      <option value="berlino">Berlino / Germania</option>
+      <option value="amsterdam">Amsterdam / Olanda</option>
+      <option value="zurigo">Zurigo / Svizzera</option>
+      <option value="bruxelles">Bruxelles / Belgio</option>
+      <option value="barcellona">Barcellona / Spagna</option>
+      <option value="new_york">New York / USA</option>
+      <option value="altra_eu">Altra città UE</option>
+      <option value="altra_extra">Altra città extra-UE</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label>Tuo stipendio netto mensile <span>(€ — metti 0 se non lavori)</span></label>
+    <input type="range" id="stipendio" min="0" max="6000" step="100" value="2000">
+    <div class="range-val" id="stipendio-val">€ 2.000</div>
+    <div class="range-hint"><span>€ 0</span><span>€ 6.000</span></div>
+  </div>
+
+  <!-- Secondo reddito coppia -->
+  <div class="extra-box" id="box-coppia">
+    <div class="field">
+      <label>Secondo reddito netto mensile <span>(€ — metti 0 se uno dei due non lavora)</span></label>
+      <input type="range" id="stipendio2" min="0" max="6000" step="100" value="1500">
+      <div class="range-val" id="stipendio2-val">€ 1.500</div>
+      <div class="range-hint"><span>€ 0</span><span>€ 6.000</span></div>
+    </div>
+  </div>
+
+  <!-- Sezione figli -->
+  <div class="figli-box" id="box-figli">
+    <div class="field">
+      <label>Secondo reddito netto mensile <span>(€ — metti 0 se uno dei due non lavora)</span></label>
+      <input type="range" id="stipendio2b" min="0" max="6000" step="100" value="1500">
+      <div class="range-val" id="stipendio2b-val">€ 1.500</div>
+      <div class="range-hint"><span>€ 0</span><span>€ 6.000</span></div>
+    </div>
+    <div class="field">
+      <label>Numero di figli</label>
+      <div class="figli-row">
+        <div class="figli-stepper">
+          <button class="figli-btn" onclick="cambiaFigli(-1)">−</button>
+          <div class="figli-num" id="figli-num">1</div>
+          <button class="figli-btn" onclick="cambiaFigli(1)">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label>Fascia d'età dei figli</label>
+      <div class="tabs" id="tabs-eta-figli">
+        <div class="tab active" onclick="setEtaFigli('nido',this)">0-3 anni (nido)</div>
+        <div class="tab" onclick="setEtaFigli('materna',this)">3-6 anni</div>
+        <div class="tab" onclick="setEtaFigli('elementari',this)">6+ anni</div>
+      </div>
+      <div class="spesa-figli-label" id="spesa-figli-label">
+        💡 Asilo nido: costo medio a Milano €650-700/mese per figlio. Al Sud con nonni vicini: costo spesso dimezzato o azzerato.
+      </div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Affitto mensile attuale <span>(€)</span></label>
+    <input type="range" id="affitto-nord" min="0" max="4000" step="50" value="1000">
+    <div class="range-val" id="affitto-nord-val">€ 1.000</div>
+    <div class="range-hint"><span>€ 0</span><span>€ 4.000</span></div>
+  </div>
+
+  <div class="section-label" style="margin-top:8px;">Dove vorreste andare</div>
+
+  <div class="field">
+    <label>Regione di destinazione</label>
+    <select id="regione-sud">
+      <option value="sicilia">Sicilia</option>
+      <option value="puglia">Puglia</option>
+      <option value="campania">Campania</option>
+      <option value="calabria">Calabria</option>
+      <option value="sardegna">Sardegna</option>
+      <option value="basilicata">Basilicata</option>
+      <option value="abruzzo">Abruzzo</option>
+      <option value="molise">Molise</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label>Tipo di città al Sud</label>
+    <div class="tabs" id="tabs-tipo">
+      <div class="tab active" onclick="setTipo('capoluogo',this)">Capoluogo</div>
+      <div class="tab" onclick="setTipo('media',this)">Città media</div>
+      <div class="tab" onclick="setTipo('borgo',this)">Borgo</div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Hai già una casa di proprietà al Sud? <span>(dei tuoi, dei suoceri, ereditata...)</span></label>
+    <div class="tabs" id="tabs-casa">
+      <div class="tab active" onclick="setCasa('no',this)">No, dovrei affittare</div>
+      <div class="tab" onclick="setCasa('si',this)">Sì, ce l'ho già</div>
+    </div>
+    <div class="spese-casa-box" id="box-spese-casa">
+      <label>Spese mensili stimate <span>(condominio, utenze, manutenzione — €)</span></label>
+      <input type="range" id="spese-casa" min="0" max="600" step="20" value="150">
+      <div class="range-val" id="spese-casa-val" style="color:#2e7d32;">€ 150</div>
+      <div class="range-hint"><span>€ 0</span><span>€ 600</span></div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Tipo di contratto</label>
+    <div class="tabs" id="tabs-contratto">
+      <div class="tab active" onclick="setContratto('dipendente',this)">Dipendente</div>
+      <div class="tab" onclick="setContratto('freelance',this)">Freelance / P.IVA</div>
+    </div>
+  </div>
+
+  <button class="btn" onclick="calcola()">Calcola il risparmio →</button>
+</div>
+
+<!-- RISULTATO -->
+<div class="risultato" id="risultato">
+  <div class="ris-nucleo" id="ris-nucleo-label"></div>
+  <div class="ris-label">Risparmio mensile stimato del nucleo</div>
+  <div class="ris-num" id="risparmio-num">€ 0</div>
+  <div class="ris-sub" id="risparmio-sub">al mese in più in tasca</div>
+
+  <div class="ris-grid">
+    <div class="ris-box"><div class="ris-box-label">Risparmio affitto</div><div class="ris-box-val green" id="box-affitto">€ 0</div></div>
+    <div class="ris-box"><div class="ris-box-label">Potere d'acquisto</div><div class="ris-box-val green" id="box-potere">+0%</div></div>
+    <div class="ris-box"><div class="ris-box-label">Risparmio annuale</div><div class="ris-box-val gold" id="box-annuale">€ 0</div></div>
+    <div class="ris-box"><div class="ris-box-label">In 5 anni</div><div class="ris-box-val gold" id="box-5anni">€ 0</div></div>
+  </div>
+
+  <div class="bonus-figli" id="bonus-figli"></div>
+  <div class="incentivo-badge" id="incentivo-box"></div>
+
+  <div class="segnala-link">
+    <a href="https://southworking.org/contatti/" target="_blank">➕ Conosci un incentivo che non compare qui? Segnalacelo</a>
+  </div>
+
+  <div class="cta-box">
+    <div class="cta-title">Scopri se puoi farcela davvero</div>
+    <div class="cta-sub">Parliamo 30 minuti della tua situazione specifica — gratis, senza impegno. Capiremo insieme cosa è possibile fare nel tuo caso.</div>
+    <a class="cta-btn" href="https://calendly.com/elena-militello-southworking/30min" target="_blank">Prenota la call di orientamento</a>
+    <div class="cta-nota">Se vuoi un piano d'azione personalizzato — normativa, negoziazione con il capo, step concreti — potrai prenotare una consulenza dedicata.</div>
+  </div>
+</div>
+
+<!-- DISCLAIMER -->
+<div class="disclaimer">
+  Stime indicative basate su dati ISTAT sul costo della vita, Osservatorio sul costo dell'infanzia e sugli incentivi regionali disponibili ad aprile 2026. Non costituiscono consulenza fiscale o legale. South Working® APS.<br><br>
+  I dati inseriti vengono raccolti in forma anonima e trattati solo in forma aggregata a scopo di ricerca sul fenomeno del south working. Nessun dato personale viene registrato.
+  <a href="https://www.southworking.org/privacy-policy/" target="_blank">Informativa sulla privacy</a>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <a href="https://www.southworking.org">South Working® APS</a> · Via Costantino Nigra 4, 90141 Palermo · <a href="mailto:info@southworking.org">info@southworking.org</a>
+</div>
+
+<script>
+  let tipoCity='capoluogo', contratto='dipendente', nucleo='solo', numFigli=1, etaFigli='nido', casaProprietà='no', doveVivi='nord';
+
+  const costoVita={
+    sicilia:{capoluogo:0.62,media:0.52,borgo:0.42},
+    puglia:{capoluogo:0.65,media:0.55,borgo:0.44},
+    campania:{capoluogo:0.67,media:0.56,borgo:0.45},
+    calabria:{capoluogo:0.58,media:0.48,borgo:0.38},
+    sardegna:{capoluogo:0.70,media:0.60,borgo:0.50},
+    basilicata:{capoluogo:0.57,media:0.47,borgo:0.37},
+    abruzzo:{capoluogo:0.66,media:0.56,borgo:0.45},
+    molise:{capoluogo:0.55,media:0.45,borgo:0.35}
+  };
+  const multNordMap={milano:1.0,roma:0.90,torino:0.82,bologna:0.85,firenze:0.87,altro:0.80};
+  const multEsteroMap={londra:1.35,parigi:1.25,berlino:1.10,amsterdam:1.20,zurigo:1.45,bruxelles:1.15,barcellona:1.05,new_york:1.50,altra_eu:1.10,altra_extra:1.10};
+  const costoNidoMap={milano:700,roma:620,torino:560,bologna:580,firenze:600,altro:500};
+  const costoFigli={
+    nido:{milano:700,roma:620,torino:560,bologna:580,firenze:600,altro:500},
+    materna:{milano:400,roma:350,torino:320,bologna:330,firenze:340,altro:280},
+    elementari:{milano:250,roma:220,torino:200,bologna:210,firenze:215,altro:180}
+  };
+  const riduzioneSud={capoluogo:0.45,media:0.30,borgo:0.15};
+  const etaLabels={
+    nido:'Asilo nido (0-3 anni): costo medio al Nord €500-700/mese per figlio. Al Sud con nonni vicini: costo spesso dimezzato o azzerato.',
+    materna:'Scuola materna (3-6 anni): costo medio al Nord €280-400/mese. Al Sud con supporto familiare: risparmio significativo.',
+    elementari:'Doposcuola e attività (6+ anni): €180-250/mese al Nord. Al Sud: costi più bassi e nonni spesso disponibili.'
+  };
+  const incentivi={
+    sicilia:{
+      dipendente:"🏛️ <strong>Legge regionale siciliana (2026)</strong> — Contributo a fondo perduto di <strong>€ 30.000</strong> (6.000€/anno per 5 anni) per il tuo datore di lavoro. ⚠️ Requisito: <strong>residenza in Sicilia</strong> al momento della concessione. Apertura domande IRFIS: 30 giugno 2026.<br><br>🏘️ <strong>Bonus comunali:</strong> Sambuca di Sicilia (€5.000-10.000 + case a €1), Gangi (fino a €15.000), Cammarata (fino a €15.000), Bivona (fino a €25.000), Troina (fino a €25.000).",
+      freelance:"🏛️ <strong>Legge regionale siciliana (2026)</strong> — Incentivi anche per autonomi. ⚠️ Requisito: <strong>residenza in Sicilia</strong>. Apertura domande IRFIS: 30 giugno 2026.<br><br>🏘️ <strong>Bonus comunali:</strong> Sambuca, Gangi, Bivona e altri offrono bonus da €5.000 a €25.000."
+    },
+    puglia:{
+      dipendente:"📋 <strong>Puglia</strong> — Nessuna legge regionale specifica sul south working ancora approvata.<br><br>🏘️ <strong>Bonus comunali:</strong> Presicce-Acquarica (Lecce) offre fino a <strong>€ 30.000</strong> per acquisto prima casa.",
+      freelance:"📋 <strong>Puglia</strong> — Regime forfettario applicabile. Verifica agevolazioni IRPEF con lo sportello.<br><br>🏘️ Presicce-Acquarica (Lecce) fino a €30.000 per acquisto prima casa."
+    },
+    campania:{
+      dipendente:"📋 <strong>Campania</strong> — Bandi regionali attivi per il rientro. Possibili detrazioni IRPEF. Verifica con lo sportello.",
+      freelance:"📋 <strong>Campania</strong> — Regime forfettario applicabile. Verifica con lo sportello."
+    },
+    calabria:{
+      dipendente:"📋 <strong>Calabria — Reddito di Residenza Attiva</strong> — Per under 40 che si trasferiscono in un borgo calabrese: fino a <strong>€ 28.000</strong>. Richiede avvio di attività economica locale.",
+      freelance:"📋 <strong>Calabria — Reddito di Residenza Attiva</strong> — Ideale per freelance che avviano attività locale: fino a €28.000 per under 40."
+    },
+    sardegna:{
+      dipendente:"📋 <strong>Sardegna</strong> — Bonus residenza per alcune zone interne. Verifica con lo sportello le opzioni disponibili.",
+      freelance:"📋 <strong>Sardegna</strong> — Regime forfettario applicabile. Verifica con lo sportello."
+    },
+    basilicata:{
+      dipendente:"📋 <strong>Basilicata</strong> — Incentivi per chi si trasferisce nei comuni interni.<br><br>🏘️ Laurenzana: fino a €10.000 per trasferimento e ristrutturazione.",
+      freelance:"📋 <strong>Basilicata</strong> — Regime forfettario applicabile. Verifica con lo sportello."
+    },
+    abruzzo:{
+      dipendente:"🏔️ <strong>Abruzzo — Legge montagna 2025</strong> — Decontribuzione 100% per under 41 in comuni montani sotto 5.000 abitanti con smart working. Fino a <strong>€ 8.000</strong> per 2 anni.<br><br>🏘️ Santo Stefano di Sessanio: fino a €44.000 tra contributo abitativo e avvio attività.",
+      freelance:"🏔️ <strong>Abruzzo — Legge montagna 2025</strong> — Applicabile anche ad autonomi. Contributo raddoppiato per chi avvia attività locale."
+    },
+    molise:{
+      dipendente:"📋 <strong>Molise — Reddito di Residenza</strong> — Fino a <strong>€ 700/mese per 3 anni</strong> (€ 25.200 totali) in comuni sotto 2.000 abitanti per chi avvia un'attività. Verifica stato bando.<br><br>🏘️ Castropignano: case a €1 + fino a €20.000 per ristrutturazione.",
+      freelance:"📋 <strong>Molise</strong> — Reddito di Residenza ideale per freelance: €700/mese per 3 anni per chi avvia attività locale."
+    }
+  };
+
+  function setNucleo(t,el){
+    nucleo=t;
+    document.getElementById('tabs-nucleo').querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('box-coppia').classList.toggle('show',t==='coppia');
+    document.getElementById('box-figli').classList.toggle('show',t==='famiglia');
+  }
+  function setDoveVivi(t,el){
+    doveVivi=t;
+    document.getElementById('tabs-dove-vivi').querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('nota-estero').classList.toggle('show',t==='estero');
+    document.getElementById('nota-sud').classList.toggle('show',t==='sud');
+    document.getElementById('citta-nord').style.display=(t==='estero')?'none':'block';
+    document.getElementById('citta-estero').style.display=(t==='estero')?'block':'none';
+    const lbl=document.getElementById('label-citta');
+    if(t==='estero') lbl.textContent='(città dove vivi adesso)';
+    else if(t==='sud') lbl.textContent='(città al Sud dove vivi già)';
+    else lbl.textContent='';
+  }
+  function setTipo(t,el){tipoCity=t;document.getElementById('tabs-tipo').querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));el.classList.add('active');}
+  function setContratto(t,el){contratto=t;document.getElementById('tabs-contratto').querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));el.classList.add('active');}
+  function setCasa(t,el){
+    casaProprietà=t;
+    document.getElementById('tabs-casa').querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('box-spese-casa').classList.toggle('show',t==='si');
+  }
+  function setEtaFigli(t,el){
+    etaFigli=t;
+    document.getElementById('tabs-eta-figli').querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('spesa-figli-label').textContent='💡 '+etaLabels[t];
+  }
+  function cambiaFigli(d){numFigli=Math.max(1,Math.min(4,numFigli+d));document.getElementById('figli-num').textContent=numFigli;}
+
+  ['stipendio','stipendio2','stipendio2b','affitto-nord','spese-casa'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.addEventListener('input',function(){
+      document.getElementById(id+'-val').textContent='€ '+Number(this.value).toLocaleString('it-IT');
+    });
+  });
+
+  function fmt(n){return '€ '+Math.round(n).toLocaleString('it-IT');}
+
+  function calcola(){
+    const s1=parseInt(document.getElementById('stipendio').value);
+    let s2=0;
+    if(nucleo==='coppia') s2=parseInt(document.getElementById('stipendio2').value);
+    if(nucleo==='famiglia') s2=parseInt(document.getElementById('stipendio2b').value);
+    const stot=s1+s2;
+    const an=parseInt(document.getElementById('affitto-nord').value);
+
+    let cn, mn;
+    if(doveVivi==='estero'){
+      const ce=document.getElementById('citta-estero').value;
+      cn='altro'; mn=multEsteroMap[ce]||1.10;
+    } else {
+      cn=document.getElementById('citta-nord').value;
+      mn=multNordMap[cn];
+    }
+    const rs=document.getElementById('regione-sud').value;
+    const ms=costoVita[rs][tipoCity];
+
+    const speseC=(casaProprietà==='si')?parseInt(document.getElementById('spese-casa').value):0;
+    const as=casaProprietà==='si'?speseC:Math.round(an*(ms/mn));
+    const ra=an-as;
+    const ap=Math.round((mn/ms-1)*100);
+    const svn=(stot-an)*0.6, svs=svn*(ms/mn), rv=svn-svs;
+
+    let risparmioFigli=0, testoFigli='';
+    if(nucleo==='famiglia'){
+      const costoNord=(costoFigli[etaFigli][cn]||costoFigli[etaFigli]['altro'])*numFigli;
+      const riduzione=riduzioneSud[tipoCity];
+      const costoSud=Math.round(costoNord*riduzione);
+      risparmioFigli=costoNord-costoSud;
+      const etaNome={nido:'asilo nido',materna:'scuola materna',elementari:'doposcuola e attività'}[etaFigli];
+      testoFigli=`👨‍👩‍👧 <strong>Risparmio su ${etaNome}</strong> — ${numFigli} ${numFigli===1?'figlio':'figli'}: al Nord circa <strong>${fmt(costoNord)}/mese</strong>. Al Sud con nonni vicini: <strong>${fmt(costoSud)}/mese</strong>. Risparmio: <strong style="color:#f5a623">${fmt(risparmioFigli)}/mese</strong> (${fmt(risparmioFigli*12)}/anno).`;
+    }
+
+    const rtot=ra+rv+risparmioFigli;
+    const rann=rtot*12;
+
+    const nomeCitta=doveVivi==='estero'
+      ?document.getElementById('citta-estero').options[document.getElementById('citta-estero').selectedIndex].text
+      :document.getElementById('citta-nord').options[document.getElementById('citta-nord').selectedIndex].text;
+    const nomeReg=document.getElementById('regione-sud').options[document.getElementById('regione-sud').selectedIndex].text;
+
+    let nlabel='';
+    if(nucleo==='solo') nlabel='Calcolo per: 1 reddito';
+    else if(nucleo==='coppia') nlabel='Calcolo per: 2 redditi ('+fmt(s1)+' + '+fmt(s2)+'/mese)';
+    else nlabel='Calcolo per: famiglia con '+numFigli+' '+(numFigli===1?'figlio':'figli')+' — 2 redditi';
+
+    document.getElementById('ris-nucleo-label').textContent=nlabel;
+    document.getElementById('risparmio-num').textContent=fmt(rtot);
+    const notaCasa=casaProprietà==='si'?' (casa di proprietà)':'';
+    document.getElementById('risparmio-sub').textContent='al mese in più in tasca a '+nomeReg+' rispetto a '+nomeCitta+notaCasa;
+    document.getElementById('box-affitto').textContent=fmt(ra);
+    document.getElementById('box-potere').textContent='+'+ap+'%';
+    document.getElementById('box-annuale').textContent=fmt(rann);
+    document.getElementById('box-5anni').textContent=fmt(rann*5);
+    document.getElementById('incentivo-box').innerHTML=incentivi[rs][contratto];
+
+    const bf=document.getElementById('bonus-figli');
+    if(nucleo==='famiglia'){bf.innerHTML=testoFigli;bf.classList.add('show');}
+    else{bf.classList.remove('show');}
+
+    // Raccolta dati anonima
+    try {
+      const payload={
+        timestamp:new Date().toISOString(),
+        dove_vivi:doveVivi,
+        citta_partenza:doveVivi==='estero'?document.getElementById('citta-estero').value:cn,
+        regione_destinazione:rs,
+        tipo_citta_sud:tipoCity,
+        nucleo:nucleo,
+        fascia_stipendio:stot<1500?'sotto_1500':stot<2500?'1500_2500':stot<4000?'2500_4000':'sopra_4000',
+        casa_proprieta:casaProprietà,
+        contratto:contratto,
+        num_figli:nucleo==='famiglia'?numFigli:0,
+        risparmio_stimato:Math.round(rtot)
+      };
+      // Attivare con Google Apps Script:
+      // fetch('https://script.google.com/macros/s/TUO_SCRIPT_ID/exec',{method:'POST',body:JSON.stringify(payload)});
+      console.log('[SW] Dati anonimi:',payload);
+    } catch(e){}
+
+    const ris=document.getElementById('risultato');
+    ris.classList.add('show');
+    setTimeout(()=>ris.scrollIntoView({behavior:'smooth',block:'start'}),50);
+  }
+</script>
+</body>
+</html>
