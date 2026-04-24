@@ -408,13 +408,9 @@
   </div>
 
   <div class="nota-box estero" id="nota-estero">
-    <strong>🌍 Sei all'estero — cosa sapere</strong><br>
-    Puoi accedere alla legge siciliana anche con un'azienda estera (UE o extra-UE), ma ci sono <strong>due requisiti fondamentali</strong>:<br><br>
-    1. Il lavoratore deve avere la <strong>residenza in Sicilia</strong> al momento della concessione del contributo.<br>
-    2. Il datore di lavoro estero deve <strong>registrarsi come datore di lavoro estero in Italia</strong> — un passaggio burocratico non banale che richiede il coinvolgimento dell'azienda.<br><br>
-    Se sei stato/a residente all'estero per almeno 2 anni, potresti inoltre avere diritto al regime <strong>rientro dei cervelli</strong> (detassazione IRPEF al 50% per 5 anni).<br><br>
-    <em>Consigliamo una call di orientamento per capire il percorso giusto nel tuo caso — soprattutto se il tuo datore è estero.</em>
-  </div>
+  <strong>🌍 Vivi all'estero?</strong><br>
+  Puoi continuare il calcolo. I requisiti su legge siciliana, datore estero e rientro dei cervelli compariranno nel risultato.
+</div>
 
   <div class="nota-box sud" id="nota-sud">
     <strong>✅ Sei già al Sud</strong><br>
@@ -786,7 +782,21 @@
     document.getElementById('box-potere').textContent='+'+ap+'%';
     document.getElementById('box-annuale').textContent=fmt(rann);
     document.getElementById('box-5anni').textContent=fmt(rann*5);
-    document.getElementById('incentivo-box').innerHTML=incentivi[rs][contratto];
+    let testoIncentivo = incentivi[rs][contratto];
+
+if (doveVivi === 'estero') {
+  testoIncentivo += `<br><br>
+  🌍 <strong>Nota per chi rientra dall'estero</strong><br>
+  Se lavori per un'azienda estera, l'accesso agli incentivi può richiedere passaggi aggiuntivi:
+  <br><br>
+  1. il lavoratore deve avere la <strong>residenza in Sicilia</strong> al momento della concessione del contributo;
+  <br>
+  2. il datore di lavoro estero potrebbe dover <strong>registrarsi come datore di lavoro estero in Italia</strong>, passaggio che richiede il coinvolgimento dell'azienda.
+  <br><br>
+  Se sei stato/a residente all'estero per almeno 2 anni, potresti inoltre valutare il regime <strong>rientro dei cervelli</strong>. Ti consigliamo una call di orientamento per capire il percorso giusto nel tuo caso.`;
+}
+
+document.getElementById('incentivo-box').innerHTML = testoIncentivo;
 
     // Bonus comunali solo per piccolo comune
     const bcBox=document.getElementById('bonus-comunali-box');
@@ -826,7 +836,6 @@
 
     const ris=document.getElementById('risultato');
     ris.classList.add('show');
-    setTimeout(()=>ris.scrollIntoView({behavior:'smooth',block:'start'}),50);
   }
 </script>
 <script>
