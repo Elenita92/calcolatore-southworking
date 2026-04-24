@@ -817,7 +817,7 @@
         risparmio_stimato:Math.round(rtot)
       };
       // Invio dati anonimi a Google Sheets via GET (aggira CORS)
-      const scriptUrl = 'https://script.google.com/macros/s/AKfycbwQHg7JWWwXLLOO3WRz8SE0odDtNfE7XyDIGhNHciwosPgRMokAJeIiVtWFTlHu6J6CwA/exec';
+      const scriptUrl = 'https://script.google.com/macros/s/AKfycbzpbIL9RSyi6phbsq1E7tU4XxLpUpS2m4Tju6sHyav2ov9Gv43TOB_hV5fmCRWQkqJ8dA/exec';
       const params = new URLSearchParams(payload).toString();
       const img = new Image();
       img.src = scriptUrl + '?' + params;
