@@ -420,7 +420,7 @@
   </div>
 
   <div class="field">
-    <label>Città attuale <span id="label-citta"></span></label>
+    <label id="label-citta-principale">Città attuale <span id="label-citta"></span></label>
     <select id="citta-nord">
       <option value="milano">Milano</option>
       <option value="roma">Roma</option>
@@ -519,7 +519,7 @@
     <div class="tabs" id="tabs-tipo">
       <div class="tab active" onclick="setTipo('capoluogo',this)">Capoluogo</div>
       <div class="tab" onclick="setTipo('media',this)">Città media</div>
-      <div class="tab" onclick="setTipo('borgo',this)">Borgo</div>
+      <div class="tab" onclick="setTipo('borgo',this)">Piccolo comune</div>
     </div>
   </div>
 
@@ -564,6 +564,8 @@
 
   <div class="bonus-figli" id="bonus-figli"></div>
   <div class="incentivo-badge" id="incentivo-box"></div>
+
+  <div class="bonus-comunali-box" id="bonus-comunali-box" style="display:none; background:rgba(245,166,35,0.1); border-left:3px solid #f5a623; padding:14px 16px; margin-bottom:16px; font-size:13px; color:rgba(255,255,255,0.85); line-height:1.65;"></div>
 
   <div class="segnala-link">
     <a href="https://southworking.org/contatti/" target="_blank">➕ Conosci un incentivo che non compare qui? Segnalacelo</a>
@@ -616,14 +618,25 @@
     materna:'Scuola materna (3-6 anni): costo medio al Nord €280-400/mese. Al Sud con supporto familiare: risparmio significativo.',
     elementari:'Doposcuola e attività (6+ anni): €180-250/mese al Nord. Al Sud: costi più bassi e nonni spesso disponibili.'
   };
+  const bonusComunali={
+    sicilia:"🏘️ <strong>Bonus comunali in Sicilia:</strong> Sambuca di Sicilia (€5.000-10.000 + case a €1), Gangi (fino a €15.000 per giovani coppie), Cammarata (fino a €15.000), Bivona (fino a €25.000), Troina (fino a €25.000). Richiedono acquisto/ristrutturazione immobile e residenza stabile.",
+    puglia:"🏘️ <strong>Bonus comunali in Puglia:</strong> Presicce-Acquarica (Lecce) offre fino a <strong>€ 30.000</strong> per acquisto prima casa — nel 2023 oltre 80 nuove famiglie si sono trasferite.",
+    campania:"🏘️ <strong>Bonus comunali in Campania:</strong> diversi comuni dell'entroterra campano offrono incentivi per nuovi residenti. Contatta lo sportello per i bandi attivi.",
+    calabria:"🏘️ <strong>Bonus comunali in Calabria:</strong> il Reddito di Residenza Attiva (fino a €28.000 per under 40) è pensato proprio per chi si trasferisce in un borgo.",
+    sardegna:"🏘️ <strong>Bonus comunali in Sardegna:</strong> diversi comuni offrono bonus residenza per nuovi abitanti. Contatta lo sportello per i bandi attivi nella zona di interesse.",
+    basilicata:"🏘️ <strong>Bonus comunali in Basilicata:</strong> Laurenzana offre fino a €10.000 per trasferimento e ristrutturazione.",
+    abruzzo:"🏔️ <strong>Bonus comuni montani in Abruzzo:</strong> Santo Stefano di Sessanio offre fino a €44.000 tra contributo abitativo e avvio attività. Legge montagna 2025 attiva.",
+    molise:"🏘️ <strong>Bonus comunali in Molise:</strong> Castropignano offre case a €1 + fino a €20.000 per ristrutturazione. Reddito di Residenza: €700/mese per 3 anni."
+  };
+
   const incentivi={
     sicilia:{
-      dipendente:"🏛️ <strong>Legge regionale siciliana (2026)</strong> — Contributo a fondo perduto di <strong>€ 30.000</strong> (6.000€/anno per 5 anni) per il tuo datore di lavoro. ⚠️ Requisito: <strong>residenza in Sicilia</strong> al momento della concessione. Apertura domande IRFIS: 30 giugno 2026.<br><br>🏘️ <strong>Bonus comunali:</strong> Sambuca di Sicilia (€5.000-10.000 + case a €1), Gangi (fino a €15.000), Cammarata (fino a €15.000), Bivona (fino a €25.000), Troina (fino a €25.000).",
-      freelance:"🏛️ <strong>Legge regionale siciliana (2026)</strong> — Incentivi anche per autonomi. ⚠️ Requisito: <strong>residenza in Sicilia</strong>. Apertura domande IRFIS: 30 giugno 2026.<br><br>🏘️ <strong>Bonus comunali:</strong> Sambuca, Gangi, Bivona e altri offrono bonus da €5.000 a €25.000."
+      dipendente:"🏛️ <strong>Legge regionale siciliana (2026)</strong> — Contributo a fondo perduto di <strong>€ 30.000</strong> (6.000€/anno per 5 anni) per il tuo datore di lavoro. ⚠️ Requisito: <strong>residenza in Sicilia</strong> al momento della concessione. Apertura domande IRFIS: 30 giugno 2026.",
+      freelance:"🏛️ <strong>Legge regionale siciliana (2026)</strong> — Incentivi anche per autonomi. ⚠️ Requisito: <strong>residenza in Sicilia</strong>. Apertura domande IRFIS: 30 giugno 2026."
     },
     puglia:{
-      dipendente:"📋 <strong>Puglia</strong> — Nessuna legge regionale specifica sul south working ancora approvata.<br><br>🏘️ <strong>Bonus comunali:</strong> Presicce-Acquarica (Lecce) offre fino a <strong>€ 30.000</strong> per acquisto prima casa.",
-      freelance:"📋 <strong>Puglia</strong> — Regime forfettario applicabile. Verifica agevolazioni IRPEF con lo sportello.<br><br>🏘️ Presicce-Acquarica (Lecce) fino a €30.000 per acquisto prima casa."
+      dipendente:"📋 <strong>Puglia</strong> — Nessuna legge regionale specifica sul south working ancora approvata. Incentivi per chi trasferisce la residenza.",
+      freelance:"📋 <strong>Puglia</strong> — Regime forfettario applicabile. Verifica agevolazioni IRPEF con lo sportello."
     },
     campania:{
       dipendente:"📋 <strong>Campania</strong> — Bandi regionali attivi per il rientro. Possibili detrazioni IRPEF. Verifica con lo sportello.",
@@ -638,15 +651,15 @@
       freelance:"📋 <strong>Sardegna</strong> — Regime forfettario applicabile. Verifica con lo sportello."
     },
     basilicata:{
-      dipendente:"📋 <strong>Basilicata</strong> — Incentivi per chi si trasferisce nei comuni interni.<br><br>🏘️ Laurenzana: fino a €10.000 per trasferimento e ristrutturazione.",
+      dipendente:"📋 <strong>Basilicata</strong> — Incentivi per chi si trasferisce nei comuni interni.",
       freelance:"📋 <strong>Basilicata</strong> — Regime forfettario applicabile. Verifica con lo sportello."
     },
     abruzzo:{
-      dipendente:"🏔️ <strong>Abruzzo — Legge montagna 2025</strong> — Decontribuzione 100% per under 41 in comuni montani sotto 5.000 abitanti con smart working. Fino a <strong>€ 8.000</strong> per 2 anni.<br><br>🏘️ Santo Stefano di Sessanio: fino a €44.000 tra contributo abitativo e avvio attività.",
+      dipendente:"🏔️ <strong>Abruzzo — Legge montagna 2025</strong> — Decontribuzione 100% per under 41 in comuni montani sotto 5.000 abitanti con smart working. Fino a <strong>€ 8.000</strong> per 2 anni.",
       freelance:"🏔️ <strong>Abruzzo — Legge montagna 2025</strong> — Applicabile anche ad autonomi. Contributo raddoppiato per chi avvia attività locale."
     },
     molise:{
-      dipendente:"📋 <strong>Molise — Reddito di Residenza</strong> — Fino a <strong>€ 700/mese per 3 anni</strong> (€ 25.200 totali) in comuni sotto 2.000 abitanti per chi avvia un'attività. Verifica stato bando.<br><br>🏘️ Castropignano: case a €1 + fino a €20.000 per ristrutturazione.",
+      dipendente:"📋 <strong>Molise — Reddito di Residenza</strong> — Fino a <strong>€ 700/mese per 3 anni</strong> (€ 25.200 totali) in comuni sotto 2.000 abitanti per chi avvia un'attività. Verifica stato bando con lo sportello.",
       freelance:"📋 <strong>Molise</strong> — Reddito di Residenza ideale per freelance: €700/mese per 3 anni per chi avvia attività locale."
     }
   };
@@ -666,10 +679,18 @@
     document.getElementById('nota-sud').classList.toggle('show',t==='sud');
     document.getElementById('citta-nord').style.display=(t==='estero')?'none':'block';
     document.getElementById('citta-estero').style.display=(t==='estero')?'block':'none';
+    // Aggiorna label città
     const lbl=document.getElementById('label-citta');
     if(t==='estero') lbl.textContent='(città dove vivi adesso)';
-    else if(t==='sud') lbl.textContent='(città al Sud dove vivi già)';
+    else if(t==='sud') lbl.textContent='(città dove ha sede il tuo datore di lavoro)';
     else lbl.textContent='';
+    // Aggiorna label campo città principale
+    const lblCitta=document.getElementById('label-citta-principale');
+    if(lblCitta){
+      if(t==='sud') lblCitta.textContent='Città del tuo datore di lavoro';
+      else if(t==='estero') lblCitta.textContent='Città attuale';
+      else lblCitta.textContent='Città attuale';
+    }
   }
   function setTipo(t,el){tipoCity=t;document.getElementById('tabs-tipo').querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));el.classList.add('active');}
   function setContratto(t,el){contratto=t;document.getElementById('tabs-contratto').querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));el.classList.add('active');}
@@ -753,6 +774,15 @@
     document.getElementById('box-annuale').textContent=fmt(rann);
     document.getElementById('box-5anni').textContent=fmt(rann*5);
     document.getElementById('incentivo-box').innerHTML=incentivi[rs][contratto];
+
+    // Bonus comunali solo per piccolo comune
+    const bcBox=document.getElementById('bonus-comunali-box');
+    if(tipoCity==='borgo' && bonusComunali[rs]){
+      bcBox.innerHTML=bonusComunali[rs];
+      bcBox.style.display='block';
+    } else {
+      bcBox.style.display='none';
+    }
 
     const bf=document.getElementById('bonus-figli');
     if(nucleo==='famiglia'){bf.innerHTML=testoFigli;bf.classList.add('show');}
