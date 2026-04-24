@@ -824,21 +824,28 @@
   }
 </script>
 <script>
-  // Comunica l'altezza reale alla pagina padre (per iframe dinamico)
   function notificaAltezza() {
-    const h = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+    const h = Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight
+    );
     window.parent.postMessage({ type: 'sw-resize', height: h }, '*');
   }
-  // Osserva i cambiamenti di dimensione del body
-  const ro = new ResizeObserver(() => notificaAltezza());
-  ro.observe(document.body);
-  ro.observe(document.documentElement);
-  // Al caricamento — multipli tentativi per sicurezza
-  document.addEventListener('DOMContentLoaded', notificaAltezza);
-  window.addEventListener('load', () => {
-    notificaAltezza();
-    setTimeout(notificaAltezza, 300);
-    setTimeout(notificaAltezza, 800);
+
+  window.addEventListener('load', notificaAltezza);
+  window.addEventListener('resize', notificaAltezza);
+
+  // Quando si aprono/chiudono box o cambiano opzioni
+  document.addEventListener('click', () => {
+    setTimeout(notificaAltezza, 50);
+  });
+
+  document.addEventListener('input', () => {
+    setTimeout(notificaAltezza, 50);
+  });
+
+  document.addEventListener('change', () => {
+    setTimeout(notificaAltezza, 50);
   });
 </script>
 </body>
