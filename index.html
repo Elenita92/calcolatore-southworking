@@ -824,5 +824,17 @@
     setTimeout(()=>ris.scrollIntoView({behavior:'smooth',block:'start'}),50);
   }
 </script>
+<script>
+  // Comunica l'altezza reale alla pagina padre (per iframe dinamico)
+  function notificaAltezza() {
+    const h = document.body.scrollHeight;
+    window.parent.postMessage({ type: 'sw-resize', height: h }, '*');
+  }
+  // Osserva i cambiamenti di dimensione del body
+  const ro = new ResizeObserver(() => notificaAltezza());
+  ro.observe(document.body);
+  // Anche al caricamento
+  window.addEventListener('load', notificaAltezza);
+</script>
 </body>
 </html>
