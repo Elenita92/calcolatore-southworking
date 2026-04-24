@@ -428,6 +428,7 @@
       <option value="bologna">Bologna</option>
       <option value="firenze">Firenze</option>
       <option value="altro">Altra città del Nord/Centro</option>
+      <option value="estero_sud" class="opt-estero" style="display:none;">Estero</option>
     </select>
     <select id="citta-estero" style="display:none; margin-top:8px;">
       <option value="londra">Londra / UK</option>
@@ -588,7 +589,7 @@
 
 <!-- FOOTER -->
 <div class="footer">
-  <a href="https://www.southworking.org">South Working® APS</a> · Via Costantino Nigra 4, 90141 Palermo · <a href="mailto:info@southworking.org">info@southworking.org</a>
+  <a href="https://www.southworking.org">South Working® — Lavorare dal Sud APS</a> · <a href="mailto:info@southworking.org">info@southworking.org</a>
 </div>
 
 <script>
@@ -604,7 +605,7 @@
     abruzzo:{capoluogo:0.66,media:0.56,borgo:0.45},
     molise:{capoluogo:0.55,media:0.45,borgo:0.35}
   };
-  const multNordMap={milano:1.0,roma:0.90,torino:0.82,bologna:0.85,firenze:0.87,altro:0.80};
+  const multNordMap={milano:1.0,roma:0.90,torino:0.82,bologna:0.85,firenze:0.87,altro:0.80,estero_sud:1.25};
   const multEsteroMap={londra:1.35,parigi:1.25,berlino:1.10,amsterdam:1.20,zurigo:1.45,bruxelles:1.15,barcellona:1.05,new_york:1.50,altra_eu:1.10,altra_extra:1.10};
   const costoNidoMap={milano:700,roma:620,torino:560,bologna:580,firenze:600,altro:500};
   const costoFigli={
@@ -679,15 +680,18 @@
     document.getElementById('nota-sud').classList.toggle('show',t==='sud');
     document.getElementById('citta-nord').style.display=(t==='estero')?'none':'block';
     document.getElementById('citta-estero').style.display=(t==='estero')?'block':'none';
+    // Mostra/nasconde opzione Estero nel select citta-nord
+    const optEstero=document.querySelector('#citta-nord option[value="estero_sud"]');
+    if(optEstero) optEstero.style.display=(t==='sud')?'block':'none';
     // Aggiorna label città
     const lbl=document.getElementById('label-citta');
     if(t==='estero') lbl.textContent='(città dove vivi adesso)';
-    else if(t==='sud') lbl.textContent='(città dove ha sede il tuo datore di lavoro)';
+    else if(t==='sud') lbl.textContent='(città dove ha sede il tuo datore di lavoro — o Estero)';
     else lbl.textContent='';
     // Aggiorna label campo città principale
     const lblCitta=document.getElementById('label-citta-principale');
     if(lblCitta){
-      if(t==='sud') lblCitta.textContent='Città del tuo datore di lavoro';
+      if(t==='sud') lblCitta.textContent='Città del datore di lavoro';
       else if(t==='estero') lblCitta.textContent='Città attuale';
       else lblCitta.textContent='Città attuale';
     }
@@ -761,14 +765,21 @@
     const nomeReg=document.getElementById('regione-sud').options[document.getElementById('regione-sud').selectedIndex].text;
 
     let nlabel='';
-    if(nucleo==='solo') nlabel='Calcolo per: 1 reddito';
-    else if(nucleo==='coppia') nlabel='Calcolo per: 2 redditi ('+fmt(s1)+' + '+fmt(s2)+'/mese)';
-    else nlabel='Calcolo per: famiglia con '+numFigli+' '+(numFigli===1?'figlio':'figli')+' — 2 redditi';
+    const prefisso = doveVivi==='sud' ? 'Risparmio in corso — ' : 'Calcolo per: ';
+    if(nucleo==='solo') nlabel=prefisso+'1 reddito';
+    else if(nucleo==='coppia') nlabel=prefisso+'2 redditi ('+fmt(s1)+' + '+fmt(s2)+'/mese)';
+    else nlabel=prefisso+'famiglia con '+numFigli+' '+(numFigli===1?'figlio':'figli')+' — 2 redditi';
 
     document.getElementById('ris-nucleo-label').textContent=nlabel;
+    document.querySelector('.ris-label').textContent = doveVivi==='sud'
+      ? 'Risparmio mensile che stai già avendo'
+      : 'Risparmio mensile stimato del nucleo';
     document.getElementById('risparmio-num').textContent=fmt(rtot);
     const notaCasa=casaProprietà==='si'?' (casa di proprietà)':'';
-    document.getElementById('risparmio-sub').textContent='al mese in più in tasca a '+nomeReg+' rispetto a '+nomeCitta+notaCasa;
+    const testoRis = doveVivi==='sud'
+      ? 'al mese che stai già risparmiando rispetto a '+nomeCitta+notaCasa
+      : 'al mese in più in tasca a '+nomeReg+' rispetto a '+nomeCitta+notaCasa;
+    document.getElementById('risparmio-sub').textContent=testoRis;
     document.getElementById('box-affitto').textContent=fmt(ra);
     document.getElementById('box-potere').textContent='+'+ap+'%';
     document.getElementById('box-annuale').textContent=fmt(rann);
